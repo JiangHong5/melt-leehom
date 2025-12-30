@@ -6,29 +6,53 @@ body, html {
     justify-content: center;
     align-items: center;
     background-color: #f0f0f0;
+    font-family: Arial, sans-serif; /* 添加字体 */
 }
 
 .container {
     position: relative;
     width: 300px;
     height: 300px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
+    border-radius: 8px; /* 圆角 */
+    overflow: hidden; /* 确保内容不溢出 */
 }
 
 #leehom {
     width: 100%;
-    height: auto;
-    transition: transform 1s;
+    height: 100%; /* 改为100%以填满容器 */
+    object-fit: cover; /* 保持图片比例并填满 */
+    transition: transform 1s linear;
+    border-radius: 8px; /* 与容器保持一致 */
 }
 
 .ice {
-    justify-content: center;
-    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; /* 初始高度为100% */
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.9) 0%, rgba(240, 248, 255, 0.8) 100%); /* 渐变效果更像冰 */
+    transition: height 0.3s ease; /* 高度变化过渡 */
+    pointer-events: none; /* 允许点击穿透到下面的元素 */
+    border-radius: 8px; /* 与容器保持一致 */
+}
+
+/* 添加冰晶纹理效果 */
+.ice::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    background-color: #ffffff;
-    opacity: 0.8;
-    transition: opacity 1s;
-    pointer-events: none;
+    background-image: 
+        radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.5) 1px, transparent 1px),
+        radial-gradient(circle at 70% 60%, rgba(255, 255, 255, 0.4) 1px, transparent 1px),
+        radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.3) 1px, transparent 1px);
+    background-size: 30px 30px, 40px 40px, 50px 50px;
+    opacity: 0.6;
+    border-radius: 8px;
 }
 
 #playBtn {
@@ -36,19 +60,40 @@ body, html {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 50px;
-    height: 50px;
+    width: 60px; /* 稍微大一点 */
+    height: 60px;
     border: none;
-    background-color: transparent;
+    background-color: rgba(0, 0, 0, 0.5); /* 半透明背景 */
+    border-radius: 50%; /* 圆形按钮 */
     cursor: pointer;
-    transition: transform 0.5s;
-    opacity: 0%;
+    transition: all 0.3s ease; /* 所有属性都有过渡 */
+    opacity: 0;
+    z-index: 10; /* 确保按钮在最上层 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 24px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* 添加播放图标（使用伪元素） */
+#playBtn::before {
+    content: '▶';
+    font-size: 20px;
+}
+
+/* 播放状态时的样式（可以通过JS添加/移除类） */
+#playBtn.playing::before {
+    content: '⏸';
 }
 
 #playBtn:hover {
-    transform: translate(-50%, -50%) scale(1.2);
+    transform: translate(-50%, -50%) scale(1.1);
+    background-color: rgba(0, 0, 0, 0.7);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 #playBtn:active {
-    transform: translate(-50%, -50%) scale(0.8);
+    transform: translate(-50%, -50%) scale(0.95);
 }
