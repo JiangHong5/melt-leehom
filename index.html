@@ -24,7 +24,7 @@
                 button = document.getElementById('playBtn');
 
                 function get_spring_festival(year) {
-                    var lantern_festival = Lunar.fromYmd(year, 1, 15);
+                    var spring_festival = Lunar.fromYmd(year, 1, 1);
                     var spr_fes_solar = spring_festival.getSolar();
                     return new Date(spr_fes_solar.getYear(), spr_fes_solar.getMonth(), spr_fes_solar.getDay());
                 }
@@ -110,3 +110,4 @@
     </script>
     </body>
 </html>
+
