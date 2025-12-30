@@ -40,7 +40,7 @@ body, html {
     border-radius: 8px; /* 与容器保持一致 */
 }
 
-/* /* 添加冰晶纹理效果 */
+/*
 .ice::before {
     content: '';
     position: absolute;
@@ -78,3 +78,4 @@ body, html {
 #playBtn:active {
     transform: translate(-50%, -50%) scale(0.8);
 }
+
