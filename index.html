@@ -53,6 +53,7 @@
             
                 function updateIce() {
                     let diff = spring - new Date();
+                    console.log(diff);
                     if (diff >= 0) {
                         ice.style.height = org_ice_height * (diff / 365.0)
                     }
@@ -110,6 +111,7 @@
     </script>
     </body>
 </html>
+
 
 
 
