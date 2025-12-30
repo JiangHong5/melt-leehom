@@ -1,20 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>刘德华解冻</title>
+        <link rel="stylesheet" href="./css/styles.css">
+    </head>
+    <body>
+        <script src="https://6tail.cn/calendar/lunar.js"></script>
+        <div class="container">
+            <img id="leehom" src="./img/leehom.png" alt="刘德华">
+            <div id="ice" class="ice"></div>
+        </div>
+        <audio id="song" src="./audio/gxnfc.wav" loop></audio>
+        <button id="playBtn">播放音乐</button>
+        <script>
+            deg = 360;
+            
+            document.addEventListener('DOMContentLoaded', function() {
+                leehom = document.getElementById('leehom');
+                ice = document.getElementById('ice');
+                org_ice_height = ice.style.height;
+                song = document.getElementById('song');
+                button = document.getElementById('playBtn');
 
-<head>
-    <meta charset="UTF-8">
-    <title>刘德华解冻</title>
-    <link rel="stylesheet" href="./css/styles.css">
-</head>
+                function get_spring_festival(year) {
+                    var lantern_festival = Lunar.fromYmd(year, 1, 15);
+                    var spr_fes_solar = spring_festival.getSolar();
+                    return new Date(spr_fes_solar.getYear(), spr_fes_solar.getMonth(), spr_fes_solar.getDay());
+                }
 
-<body>
-    <div class="container">
-        <img id="leehom" src="./img/leehom.png" alt="刘德华">
-        <div id="ice" class="ice"></div>
-    </div>
-    <audio id="song" src="./audio/gxnfc.wav" loop></audio>
-    <script src="./js/script.js"></script>
-    <button id="playBtn">播放音乐</button>
-</body>
+                function get_lantern_festival(year) {
+                    var lantern_festival = Lunar.fromYmd(year, 1, 15);
+                    var lan_fes_solar = lantern_festival.getSolar();
+                    return new Date(lan_fes_solar.getYear(), lan_fes_solar.getMonth(), lan_fes_solar.getDay());
+                }
 
+                var spring = new Date();
+                var lantern = new Date();
+                
+                var this_year = new Date().getFullYear();
+                var next_year = new Date().getFullYear() + 1;
+                var this_spr = get_spring_festival(this_year);
+                var this_lan = get_lantern_festival(this_year);
+                if (new Date() >= this_spr && new Date() <= this_lan) {
+                    spring = this_spr;
+                    lantern = this_lan;
+                }
+                else {
+                    spring = get_spring_festival(next_year);
+                    lantern = get_lantern_festival(next_year);
+                }
+            
+                function updateIce() {
+                    let diff = spring - new Date();
+                    if (diff >= 0) {
+                        ice.style.height = org_ice_height * (diff / 365.0)
+                    }
+                    else {
+                        ice.style.height = 0;
+                    }
+                }
+            
+                function rotateLeehom() {
+                    deg += 360;
+                    leehom.style.transform = `rotate(${deg}deg)`;
+                    leehom.style.transition = `transform ${deg / 360}s linear`;
+                    setTimeout(rotateLeehom, 1000);
+                }
+            
+                function playSong() {
+                    song.play();
+                    song.loop = true;
+                    song.currentTime = 0;
+                }
+            
+                function stopSong() {
+                    song.pause();
+                    song.currentTime = 0;
+                }
+            
+                function checkTime() {
+                    const now = new Date();
+            
+                    if (now >= spring && now < lantern) {
+                        rotateLeehom();
+                        
+                        button.style.opacity = '100%';
+                    } else if (now >= targetDate2) {
+                        stopSong();
+                        button.style.opacity = '0%';
+                    }
+                    else {
+                        button.style.opacity = '0%';
+                    }
+                }
+            
+                setInterval(checkTime, 1000);
+                setInterval(() => {
+                    const now = new Date();
+                    if (now >= targetDate && now < targetDate2) {
+                        playSong();
+                    } else {
+                        stopSong();
+                    }
+                }, 7000);
+                setInterval(updateIce, 100);
+            });
+    
+    </script>
+    </body>
 </html>
