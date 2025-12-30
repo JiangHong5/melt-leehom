@@ -22,7 +22,7 @@ body, html {
 
 .ice {
     position: absolute;
-    top: 0%;
+    top: 10%;
     left: 0%;
     width: 100%;
     height: 100%;
@@ -52,3 +52,4 @@ body, html {
 #playBtn:active {
     transform: translate(-50%, -50%) scale(0.8);
 }
+
