@@ -35,13 +35,11 @@ body, html {
     background-color: #ffffff;
     opacity: 0.8;
     transition: opacity 1s; 
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.9) 0%, rgba(240, 248, 255, 0.8) 100%); /* 渐变效果更像冰 */
-    transition: height 0.3s ease; /* 高度变化过渡 */
     pointer-events: none; /* 允许点击穿透到下面的元素 */
     border-radius: 8px; /* 与容器保持一致 */
 }
 
-/* 添加冰晶纹理效果 */
+/* /* 添加冰晶纹理效果 */
 .ice::before {
     content: '';
     position: absolute;
@@ -56,7 +54,7 @@ body, html {
     background-size: 30px 30px, 40px 40px, 50px 50px;
     opacity: 0.6;
     border-radius: 8px;
-}
+} */
 
 #playBtn {
     position: absolute;
@@ -100,3 +98,4 @@ body, html {
 #playBtn:active {
     transform: translate(-50%, -50%) scale(0.95);
 }
+
