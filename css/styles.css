@@ -27,11 +27,14 @@ body, html {
 }
 
 .ice {
-    position: absolute;
-    top: 0;
-    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
-    height: 100%; /* 初始高度为100% */
+    height: 100%;
+    background-color: #ffffff;
+    opacity: 0.8;
+    transition: opacity 1s; 
     background: linear-gradient(to bottom, rgba(255, 255, 255, 0.9) 0%, rgba(240, 248, 255, 0.8) 100%); /* 渐变效果更像冰 */
     transition: height 0.3s ease; /* 高度变化过渡 */
     pointer-events: none; /* 允许点击穿透到下面的元素 */
