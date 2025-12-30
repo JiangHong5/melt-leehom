@@ -19,13 +19,6 @@
             document.addEventListener('DOMContentLoaded', function() {
                 leehom = document.getElementById('leehom');
                 ice = document.getElementById('ice');
-                org_ice_height = 0；
-                if (ice.style.height) {
-                    org_ice_height = ice.style.height;
-                }
-                else {
-                    org_ice_height = leehom.style.height;
-                }
                 song = document.getElementById('song');
                 button = document.getElementById('playBtn');
 
@@ -61,7 +54,7 @@
                     let diff = spring - new Date();
                     console.log(org_ice_height);
                     if (diff >= 0) {
-                        ice.style.height = org_ice_height * (diff / 86400000 / 365.0)
+                        ice.style.height = diff / 86400000 / 365.0 * 100 + '%';
                     }
                     else {
                         ice.style.height = 0;
@@ -117,6 +110,7 @@
     </script>
     </body>
 </html>
+
 
 
 
