@@ -6,7 +6,6 @@ body, html {
     justify-content: center;
     align-items: center;
     background-color: #f0f0f0;
-    font-family: Arial, sans-serif; /* 添加字体 */
 }
 
 .container {
@@ -17,23 +16,19 @@ body, html {
 
 #leehom {
     width: 100%;
-    height: 100%; /* 改为100%以填满容器 */
-    object-fit: cover; /* 保持图片比例并填满 */
-    transition: transform 1s linear;
-    border-radius: 8px; /* 与容器保持一致 */
+    height: auto;
+    transition: transform 1s;
 }
 
 .ice {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    position: absolute;
     top: 0%;
+    left: 0%;
     width: 100%;
     height: 100%;
     background-color: #ffffff;
     opacity: 0.8;
-    transition: opacity 1s; 
-    pointer-events: none; /* 允许点击穿透到下面的元素 */
+    transition: opacity 1s;
 }
 
 #playBtn {
@@ -57,5 +52,3 @@ body, html {
 #playBtn:active {
     transform: translate(-50%, -50%) scale(0.8);
 }
-
-
