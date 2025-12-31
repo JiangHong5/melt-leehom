@@ -94,13 +94,11 @@
                         button.style.opacity = '0%';
                     }
                 }
-
-                
+                        rotateLeehom();
                 setInterval(checkTime, 1000);
                 setInterval(() => {
                     const now = new Date();
                     if (now >= spring && now < lantern) {
-                        rotateLeehom();
                         playSong();
                     } else {
                         stopSong();
@@ -112,6 +110,7 @@
     </script>
     </body>
 </html>
+
 
 
 
