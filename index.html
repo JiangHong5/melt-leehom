@@ -49,7 +49,6 @@
                     spring = get_spring_festival(next_year);
                     lantern = get_lantern_festival(next_year);
                 }
-                spring = new Date(2025, 11, 31, 0, 0, 0);
                 console.log(`${spring} ${new Date()} && ${new Date()} ${lantern}`);
                 function updateIce() {
                     let diff = spring - new Date();
@@ -62,7 +61,6 @@
                 }
             
                 function rotateLeehom() {
-                    console.log("Called rotateLeehom");
                     deg += 360;
                     leehom.style.transform = `rotate(${deg}deg)`;
                     leehom.style.transition = `transform ${deg / 360}s linear`;
@@ -116,6 +114,7 @@
         </script>
     </body>
 </html>
+
 
 
 
