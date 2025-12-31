@@ -25,7 +25,7 @@
                 function get_spring_festival(year) {
                     var spring_festival = Lunar.fromYmd(year, 1, 1);
                     var spr_fes_solar = spring_festival.getSolar();
-                    return new Date(spr_fes_solar.getYear(), spr_fes_solar.getMonth(), spr_fes_solar.getDay());
+                    return new Date(spr_fes_solar.getYear(), spr_fes_solar.getMonth(), spr_fes_solar.getDay(), 0, 0, 0);
                 }
 
                 function get_lantern_festival(year) {
@@ -49,7 +49,7 @@
                     spring = get_spring_festival(next_year);
                     lantern = get_lantern_festival(next_year);
                 }
-                spring = Date(2025, 12, 31);
+                spring = Date(2025, 12, 31, 0, 0, 0);
                 console.log(`${spring} ${new Date()} && ${new Date()} ${lantern}`);
                 function updateIce() {
                     let diff = spring - new Date();
@@ -116,6 +116,7 @@
         </script>
     </body>
 </html>
+
 
 
 
