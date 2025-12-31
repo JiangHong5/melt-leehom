@@ -50,6 +50,7 @@
                     lantern = get_lantern_festival(next_year);
                 }
                 spring = Date(2025, 12, 31);
+                console.log(spring <= new Date() && new Date() < lantern);
                 function updateIce() {
                     let diff = spring - new Date();
                     if (diff >= 0) {
@@ -115,6 +116,7 @@
         </script>
     </body>
 </html>
+
 
 
 
