@@ -94,8 +94,13 @@
                         button.style.opacity = '0%';
                     }
                 }
+                setInterval(() => {
+                    const now = new Date();
+                    if (now >= spring && now < lantern) {
                         rotateLeehom();
-                setInterval(checkTime, 1000);
+                    }
+                }, 1000)
+                setInterval(checkTime, 100);
                 setInterval(() => {
                     const now = new Date();
                     if (now >= spring && now < lantern) {
@@ -107,9 +112,10 @@
                 setInterval(updateIce, 100);
             });
     
-    </script>
+        </script>
     </body>
 </html>
+
 
 
 
