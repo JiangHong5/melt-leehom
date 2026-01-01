@@ -41,7 +41,7 @@
                 var next_year = new Date().getFullYear() + 1;
                 var this_spr = get_spring_festival(this_year);
                 var this_lan = get_lantern_festival(this_year);
-                if (new Date() >= this_spr && new Date() <= this_lan) {
+                if (new Date() < this_spr || new Date() >= this_spr && new Date() <= this_lan) {
                     spring = this_spr;
                     lantern = this_lan;
                 }
@@ -49,7 +49,8 @@
                     spring = get_spring_festival(next_year);
                     lantern = get_lantern_festival(next_year);
                 }
-                console.log(`${spring} ${new Date()} && ${new Date()} ${lantern}`);
+                console.log(`${this_spr}    ${this_lan}    ${get_spring_festival(next_year)}    ${get_lantern_festival(next_year)}`)
+                console.log(`${spring}    ${new Date()}    &&    ${new Date()}    ${lantern}`);
                 function updateIce() {
                     let diff = spring - new Date();
                     if (diff >= 0) {
@@ -114,6 +115,7 @@
         </script>
     </body>
 </html>
+
 
 
 
