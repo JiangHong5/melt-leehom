@@ -25,13 +25,13 @@
                 function get_spring_festival(year) {
                     var spring_festival = Lunar.fromYmd(year, 1, 1);
                     var spr_fes_solar = spring_festival.getSolar();
-                    return new Date(spr_fes_solar.getYear(), spr_fes_solar.getMonth(), spr_fes_solar.getDay(), 0, 0, 0);
+                    return new Date(spr_fes_solar.getYear(), spr_fes_solar.getMonth() - 1, spr_fes_solar.getDay(), 0, 0, 0);
                 }
 
                 function get_lantern_festival(year) {
                     var lantern_festival = Lunar.fromYmd(year, 1, 15);
                     var lan_fes_solar = lantern_festival.getSolar();
-                    return new Date(lan_fes_solar.getYear(), lan_fes_solar.getMonth(), lan_fes_solar.getDay(), 23, 59, 59);
+                    return new Date(lan_fes_solar.getYear(), lan_fes_solar.getMonth() - 1, lan_fes_solar.getDay(), 23, 59, 59);
                 }
 
                 var spring = new Date();
@@ -114,6 +114,7 @@
         </script>
     </body>
 </html>
+
 
 
 
