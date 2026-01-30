@@ -18,117 +18,316 @@
                 </div>
             </nav>
         </div>
-        <div class="container-container">
-            <div class="container">
-                <img id="leehom" src="./img/leehom.png" alt="刘德华">
-                <div id="ice" class="ice"></div>
-                <button id="playBtn">播放音乐</button>
-            </div>
-            <audio id="song" src="./audio/gxnfc.wav" loop></audio>
-                
-            <script>
-                deg = 360;
-                
-                document.addEventListener('DOMContentLoaded', function() {
-                    leehom = document.getElementById('leehom');
-                    ice = document.getElementById('ice');
-                    song = document.getElementById('song');
-                    button = document.getElementById('playBtn');
-    
-                    function get_spring_festival(year) {
-                        var spring_festival = Lunar.fromYmd(year, 1, 1);
-                        var spr_fes_solar = spring_festival.getSolar();
-                        return new Date(spr_fes_solar.getYear(), spr_fes_solar.getMonth() - 1, spr_fes_solar.getDay());
-                    }
-    
-                    function get_lantern_festival(year) {
-                        var lantern_festival = Lunar.fromYmd(year, 1, 15);
-                        var lan_fes_solar = lantern_festival.getSolar();
-                        return new Date(lan_fes_solar.getYear(), lan_fes_solar.getMonth() - 1, lan_fes_solar.getDay() + 1);
-                    }
-    
-                    var spring = new Date();
-                    var lantern = new Date();
-                    
-                    var this_year = new Date().getFullYear();
-                    var next_year = new Date().getFullYear() + 1;
-                    var this_spr = get_spring_festival(this_year);
-                    var this_lan = get_lantern_festival(this_year);
-                    if (new Date() < this_spr || new Date() >= this_spr && new Date() <= this_lan) {
-                        spring = this_spr;
-                        lantern = this_lan;
-                    }
-                    else {
-                        spring = get_spring_festival(next_year);
-                        lantern = get_lantern_festival(next_year);
-                    }
-                    // console.log(`${this_spr}    ${this_lan}    ${get_spring_festival(next_year)}    ${get_lantern_festival(next_year)}`)
-                    // console.log(`${spring}    ${new Date()}    &&    ${new Date()}    ${lantern}`);
-                    function updateIce() {
-                        let diff = spring - new Date();
-                        if (diff >= 0) {
-                            ice.style.height = diff / 86400000 / 365.0 * 100 + '%';
-                        }
-                        else {
-                            ice.style.height = 0;
-                        }
-                    }
-                
-                    function rotateLeehom() {
-                        deg += 360;
-                        leehom.style.transform = `rotate(${deg}deg)`;
-                        leehom.style.transition = `transform ${deg / 360}s linear`;
-                        setTimeout(rotateLeehom, 1000);
-                    }
-                
-                    function playSong() {
-                        song.play();
-                        song.loop = true;
-                        song.currentTime = 0;
-                    }
-                
-                    function stopSong() {
-                        song.pause();
-                        song.currentTime = 0;
-                    }
-                
-                    function checkTime() {
-                        const now = new Date();
-                
-                        if (now >= spring && now < lantern) {
-                            rotateLeehom();
-                            
-                            button.style.opacity = '100%';
-                        } else if (now >= lantern) {
-                            stopSong();
-                            button.style.opacity = '0%';
-                        }
-                        else {
-                            button.style.opacity = '0%';
-                        }
-                    }
-                    setInterval(() => {
-                        const now = new Date();
-                        if (now >= spring && now < lantern) {
-                            rotateLeehom();
-                        }
-                    }, 1000)
-                    setInterval(checkTime, 100);
-                    setInterval(() => {
-                        const now = new Date();
-                        if (now >= spring && now < lantern) {
-                            playSong();
-                        } else {
-                            stopSong();
-                        }
-                    }, 7000);
-                    setInterval(updateIce, 100);
-                });
         
-            </script>
+        <div class="main-content">
+            <div class="frost-container">
+                <img id="leehom" src="./img/leehom.png" alt="刘德华">
+                <div id="ice" class="ice-overlay"></div>
+            </div>
+            
+            <div class="controls">
+                <button id="playBtn" class="music-btn" aria-label="播放音乐">
+                    <span class="btn-icon">▶</span>
+                </button>
+                <div id="countdown" class="countdown"></div>
+            </div>
+        </div>
+        
+        <audio id="song" src="./audio/gxnfc.wav"></audio>
+        
+        <script>
+            // 配置常量
+            const CONFIG = {
+                ROTATION_SPEED: 180, // 每秒旋转180度
+                UPDATE_INTERVAL: 100, // 更新间隔(ms)
+                FESTIVAL_SEASON: {    // 节日季节定义
+                    SPRING: 'spring',
+                    LANTERN: 'lantern',
+                    OFF_SEASON: 'off'
+                }
+            };
+            
+            // 主应用类
+            class LeeHomThawApp {
+                constructor() {
+                    this.elements = {};
+                    this.currentSeason = CONFIG.FESTIVAL_SEASON.OFF_SEASON;
+                    this.rotationAngle = 0;
+                    this.animationId = null;
+                    this.isMusicPlaying = false;
+                    this.festivalDates = {};
+                    
+                    this.init();
+                }
+                
+                // 初始化
+                async init() {
+                    this.cacheElements();
+                    this.calculateFestivalDates();
+                    this.bindEvents();
+                    this.startMainLoop();
+                }
+                
+                // 缓存DOM元素
+                cacheElements() {
+                    this.elements = {
+                        leehom: document.getElementById('leehom'),
+                        ice: document.getElementById('ice'),
+                        song: document.getElementById('song'),
+                        playBtn: document.getElementById('playBtn'),
+                        countdown: document.getElementById('countdown')
+                    };
+                }
+                
+                // 计算节日日期
+                calculateFestivalDates() {
+                    const currentYear = new Date().getFullYear();
+                    
+                    // 获取今年春节
+                    const thisYearSpring = this.getFestivalDate(currentYear, 1, 1);
+                    const thisYearLantern = this.getFestivalDate(currentYear, 1, 15);
+                    
+                    // 获取明年春节
+                    const nextYearSpring = this.getFestivalDate(currentYear + 1, 1, 1);
+                    
+                    const now = new Date();
+                    
+                    // 判断当前处于哪个时间段
+                    if (now < thisYearSpring) {
+                        // 春节前
+                        this.festivalDates = {
+                            spring: thisYearSpring,
+                            lantern: thisYearLantern,
+                            nextSpring: nextYearSpring
+                        };
+                    } else if (now >= thisYearSpring && now <= thisYearLantern) {
+                        // 春节期间
+                        this.festivalDates = {
+                            spring: thisYearSpring,
+                            lantern: thisYearLantern,
+                            nextSpring: nextYearSpring
+                        };
+                    } else {
+                        // 春节后
+                        this.festivalDates = {
+                            spring: nextYearSpring,
+                            lantern: this.getFestivalDate(currentYear + 1, 1, 15),
+                            nextSpring: this.getFestivalDate(currentYear + 2, 1, 1)
+                        };
+                    }
+                }
+                
+                // 获取节日日期（公历）
+                getFestivalDate(year, lunarMonth, lunarDay) {
+                    try {
+                        const lunarDate = Lunar.fromYmd(year, lunarMonth, lunarDay);
+                        const solarDate = lunarDate.getSolar();
+                        return new Date(
+                            solarDate.getYear(),
+                            solarDate.getMonth() - 1,
+                            solarDate.getDay()
+                        );
+                    } catch (error) {
+                        console.error('计算农历日期失败:', error);
+                        // 返回一个默认日期（正月初一）
+                        return new Date(year, 0, 1);
+                    }
+                }
+                
+                // 绑定事件
+                bindEvents() {
+                    // 音乐按钮点击事件
+                    this.elements.playBtn.addEventListener('click', () => {
+                        this.toggleMusic();
+                    });
+                    
+                    // 页面可见性变化时暂停音乐
+                    document.addEventListener('visibilitychange', () => {
+                        if (document.hidden) {
+                            this.pauseMusic();
+                        }
+                    });
+                }
+                
+                // 主循环
+                startMainLoop() {
+                    const update = () => {
+                        this.updateSeasonState();
+                        this.updateIceLayer();
+                        this.updateCountdown();
+                        this.updateRotation();
+                        
+                        setTimeout(() => requestAnimationFrame(update), CONFIG.UPDATE_INTERVAL);
+                    };
+                    
+                    requestAnimationFrame(update);
+                }
+                
+                // 更新季节状态
+                updateSeasonState() {
+                    const now = new Date();
+                    const { spring, lantern } = this.festivalDates;
+                    
+                    if (now >= spring && now < lantern) {
+                        this.setSeason(CONFIG.FESTIVAL_SEASON.SPRING);
+                    } else if (now >= lantern) {
+                        this.setSeason(CONFIG.FESTIVAL_SEASON.LANTERN);
+                    } else {
+                        this.setSeason(CONFIG.FESTIVAL_SEASON.OFF_SEASON);
+                    }
+                }
+                
+                // 设置当前季节
+                setSeason(season) {
+                    if (this.currentSeason === season) return;
+                    
+                    this.currentSeason = season;
+                    
+                    switch (season) {
+                        case CONFIG.FESTIVAL_SEASON.SPRING:
+                            this.startRotation();
+                            this.showPlayButton();
+                            this.elements.ice.style.opacity = '0';
+                            break;
+                            
+                        case CONFIG.FESTIVAL_SEASON.LANTERN:
+                            this.stopRotation();
+                            this.pauseMusic();
+                            this.hidePlayButton();
+                            break;
+                            
+                        case CONFIG.FESTIVAL_SEASON.OFF_SEASON:
+                            this.stopRotation();
+                            this.pauseMusic();
+                            this.hidePlayButton();
+                            this.elements.ice.style.opacity = '0.8';
+                            break;
+                    }
+                }
+                
+                // 更新冰层
+                updateIceLayer() {
+                    if (this.currentSeason !== CONFIG.FESTIVAL_SEASON.OFF_SEASON) return;
+                    
+                    const now = new Date();
+                    const timeToSpring = this.festivalDates.spring - now;
+                    const daysToSpring = timeToSpring / (1000 * 60 * 60 * 24);
+                    
+                    // 冰层高度：距离春节的天数比例（最多100%）
+                    const maxDays = 90; // 最多显示90天的倒计时
+                    const iceHeight = Math.min(100, (daysToSpring / maxDays) * 100);
+                    
+                    this.elements.ice.style.height = `${iceHeight}%`;
+                }
+                
+                // 更新倒计时显示
+                updateCountdown() {
+                    const now = new Date();
+                    const timeToSpring = this.festivalDates.spring - now;
+                    
+                    if (timeToSpring <= 0 || this.currentSeason === CONFIG.FESTIVAL_SEASON.SPRING) {
+                        this.elements.countdown.textContent = '恭喜发财！';
+                        return;
+                    }
+                    
+                    const days = Math.floor(timeToSpring / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((timeToSpring % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    
+                    this.elements.countdown.textContent = `解冻倒计时: ${days}天${hours}小时`;
+                }
+                
+                // 更新旋转动画
+                updateRotation() {
+                    if (this.currentSeason !== CONFIG.FESTIVAL_SEASON.SPRING) return;
+                    
+                    this.rotationAngle += (CONFIG.ROTATION_SPEED * CONFIG.UPDATE_INTERVAL) / 1000;
+                    if (this.rotationAngle >= 360) {
+                        this.rotationAngle -= 360;
+                    }
+                    
+                    this.elements.leehom.style.transform = `rotate(${this.rotationAngle}deg)`;
+                }
+                
+                // 开始旋转
+                startRotation() {
+                    if (this.animationId) return;
+                    this.rotationAngle = 0;
+                }
+                
+                // 停止旋转
+                stopRotation() {
+                    this.rotationAngle = 0;
+                    this.elements.leehom.style.transform = 'rotate(0deg)';
+                }
+                
+                // 切换音乐
+                toggleMusic() {
+                    if (this.isMusicPlaying) {
+                        this.pauseMusic();
+                    } else {
+                        this.playMusic();
+                    }
+                }
+                
+                // 播放音乐
+                playMusic() {
+                    if (this.currentSeason !== CONFIG.FESTIVAL_SEASON.SPRING) return;
+                    
+                    this.elements.song.play().then(() => {
+                        this.isMusicPlaying = true;
+                        this.elements.playBtn.classList.add('playing');
+                        this.elements.playBtn.querySelector('.btn-icon').textContent = '⏸';
+                    }).catch(error => {
+                        console.warn('自动播放被阻止，需要用户交互:', error);
+                        // 显示提示
+                        this.showPlaybackHint();
+                    });
+                }
+                
+                // 暂停音乐
+                pauseMusic() {
+                    this.elements.song.pause();
+                    this.isMusicPlaying = false;
+                    this.elements.playBtn.classList.remove('playing');
+                    this.elements.playBtn.querySelector('.btn-icon').textContent = '▶';
+                }
+                
+                // 显示播放提示
+                showPlaybackHint() {
+                    const hint = document.createElement('div');
+                    hint.className = 'playback-hint';
+                    hint.innerHTML = `
+                        <p>点击播放按钮播放音乐</p>
+                        <small>浏览器需要用户交互才能播放音频</small>
+                    `;
+                    document.querySelector('.controls').appendChild(hint);
+                    
+                    setTimeout(() => hint.remove(), 3000);
+                }
+                
+                // 显示播放按钮
+                showPlayButton() {
+                    this.elements.playBtn.style.opacity = '1';
+                    this.elements.playBtn.style.pointerEvents = 'auto';
+                }
+                
+                // 隐藏播放按钮
+                hidePlayButton() {
+                    this.elements.playBtn.style.opacity = '0';
+                    this.elements.playBtn.style.pointerEvents = 'none';
+                }
+            }
+            
+            // 启动应用
+            document.addEventListener('DOMContentLoaded', () => {
+                new LeeHomThawApp();
+            });
+    
+        </script>
         </div>
     </body>
 </html>
+
 
 
 
