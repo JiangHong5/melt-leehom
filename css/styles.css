@@ -1,5 +1,5 @@
 /* styles.css */
-body, html {
+.container-container {
     height: 100%;
     margin: 0;
     display: flex;
@@ -52,4 +52,5 @@ body, html {
 #playBtn:active {
     transform: translate(-50%, -50%) scale(0.8);
 }
+
 
