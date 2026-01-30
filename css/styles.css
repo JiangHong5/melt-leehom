@@ -1,57 +1,136 @@
-/* styles.css */
-.container-container {
-    height: 100%;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #f0f0f0;
+:root {
+    --primary-color: #d32f2f;
+    --secondary-color: #ff9800;
+    --bg-color: #f5f5f5;
+    --ice-color: rgba(255, 255, 255, 0.85);
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
-.container {
+.main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 80px);
+    padding: 20px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.frost-container {
     position: relative;
     width: 300px;
     height: 300px;
+    margin-bottom: 40px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease;
+}
+
+.frost-container:hover {
+    transform: scale(1.02);
 }
 
 #leehom {
     width: 100%;
-    height: auto;
-    transition: transform 1s;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.1s linear;
+    border-radius: 20px;
 }
 
-.ice {
+.ice-overlay {
     position: absolute;
-    top: 10%;
-    left: 0%;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    background-color: #ffffff;
-    opacity: 0.8;
-    transition: opacity 1s;
+    background: var(--ice-color);
+    backdrop-filter: blur(2px);
+    transition: height 1s ease, opacity 0.5s ease;
+    border-radius: 20px;
+    pointer-events: none;
 }
 
-#playBtn {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 50px;
-    height: 50px;
+.controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.music-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: white;
     border: none;
-    background-color: transparent;
     cursor: pointer;
-    transition: transform 0.5s;
-    opacity: 0%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(211, 47, 47, 0.3);
+    opacity: 0;
+    pointer-events: none;
 }
 
-#playBtn:hover {
-    transform: translate(-50%, -50%) scale(1.2);
+.music-btn:hover {
+    transform: scale(1.1);
+    background: #b71c1c;
 }
 
-#playBtn:active {
-    transform: translate(-50%, -50%) scale(0.8);
+.music-btn.playing {
+    background: var(--secondary-color);
 }
 
+.countdown {
+    padding: 12px 24px;
+    background: white;
+    border-radius: 30px;
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--primary-color);
+    box-shadow: var(--shadow);
+    animation: pulse 2s infinite;
+}
 
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
 
+.playback-hint {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translate(-50%, 10px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .frost-container {
+        width: 250px;
+        height: 250px;
+    }
+    
+    .countdown {
+        font-size: 16px;
+        padding: 10px 20px;
+    }
+}
